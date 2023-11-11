@@ -21,26 +21,26 @@ namespace picacomic
     {
         static async Task Main(string[] args)
         {
-             var accountsString = args[0];
-
-
+            var accountsString = args[0];
+            
+            
             if (args.Length == 0 || string.IsNullOrEmpty(accountsString))
             {
                 throw new Exception("请查看文档设置账号密码");
             }
-          var rawSplit = accountsString.Split('|');
+            
+            var rawSplit = accountsString.Split('|');
 
             if (rawSplit.Length % 2 != 0)
             {
-                if (!string.IsNullOrEmpty(item))
-                {
-                     throw new Exception("账号密码不匹配");
+                throw new Exception("账号密码不匹配");
             }
-             var accounts = rawSplit.Batch(2)
+
+            var accounts = rawSplit.Batch(2)
                 .Select(b => b.ToArray())
                 .Select(b => new Account(b[0], b[1]))
                 .ToList();
-
+            
             for (int i = 0; i < accounts.Count; i++)
             {
                 await PunchAsync(accounts[i].Username, accounts[i].Password, i);
@@ -49,7 +49,7 @@ namespace picacomic
 
         private static void Log(object o)
         {
-            Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}]{o.ToString()}");
+            Console.WriteLine($"[{DateTime.Now:HH:mm:ss}]{o}");
         }
 
         private static async Task PunchAsync(string username, string password, int index)
@@ -68,7 +68,7 @@ namespace picacomic
             if (punch.PunchSuccess)
             {
                 Log("签到完成");
-                 Profile profilePunch = await PicacomicUrl.Profile();
+                Profile profilePunch = await PicacomicUrl.Profile();
                 Log($"等级：{profilePunch.User.Level}");
                 Log($"当前经验：{profilePunch.User.Exp}");
             }
@@ -77,8 +77,8 @@ namespace picacomic
                 throw new Exception("签到失败");
             }
         }
-
-    //credit to https://github.com/morelinq/MoreLINQ/blob/master/MoreLinq/Batch.cs
+        
+        //credit to https://github.com/morelinq/MoreLINQ/blob/master/MoreLinq/Batch.cs
         private static IEnumerable<IEnumerable<TSource>> Batch<TSource>(
             this IEnumerable<TSource> source, int size)
         {
